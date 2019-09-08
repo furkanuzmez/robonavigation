@@ -33,10 +33,13 @@
  var c = document.getElementById("coordiv");
  var ctx = c.getContext("2d");
  var img = new Image();
+ var img2 = new Image();
  img.src = "images/flag.png";
+ img2.src = "images/unimap.jpg";
  var tut = 0 ;
  var i = 0;
  var stored_coordinates;
+
 
 function get_img(tut){
     if(tut == 1) {
@@ -82,27 +85,28 @@ function cnvs_setCoordinates(event){
 function get_coordinates(){
   axios.get('/coco').then(resp => {
     //console.log(resp.data);
-    for(i=0;i<resp.data.length;i++)
-    {
-      console.log(resp.data[i]);
-      get_img(resp.data[i].type);
-      ctx.drawImage(img,resp.data[i].x,resp.data[i].y);
-      var para = document.createElement("p");
-      para.onclick = cnvs_clearCoordinates;
-      var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
-      para.appendChild(node);
-      var element = document.getElementById("div1");
-      element.appendChild(para);
-    };
-    ctx.moveTo(resp.data[0].x, resp.data[0].y);
+    ctx.drawImage(img2,0,0);
+     ctx.moveTo(resp.data[0].x, resp.data[0].y);
      for(i=1;i<resp.data.length;i++)
     {
        ctx.lineTo(resp.data[i].x, resp.data[i].y);
     }
-ctx.closePath();
-ctx.stroke();
-ctx.fillStyle = "green";
-ctx.fill();
+            ctx.closePath();
+            ctx.stroke();
+           
+    for(i=0;i<resp.data.length;i++)
+    {
+              console.log(resp.data[i]);
+              get_img(resp.data[i].type);
+              ctx.drawImage(img,resp.data[i].x,resp.data[i].y);
+              var para = document.createElement("p");
+              para.onclick = cnvs_clearCoordinates;
+              var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
+              para.appendChild(node);
+              var element = document.getElementById("div1");
+              element.appendChild(para);
+    };
+   
   }).catch(error => {
     console.log(error.response)
   });
