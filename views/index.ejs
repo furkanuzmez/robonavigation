@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<html>
+ <button onclick="addpoints()"> PathFinder</button>
+   <button onclick="get_coordinates()"> GetCoordinates</button>
+<body >
+<div onclick="choseone(event)"> 
+  <img src="images/flag.png" alt="Smiley face" height="42" width="42">
+   </div> 
+  <div onclick="choseone2(event)"> 
+  <img src="images/point.png" alt="Smiley face" height="42" width="42">
+   </div> 
+<div onclick="choseone3(event)"> 
+  <img src="/images/car.png" alt="Smiley face" height="42" width="42">
+   </div> 
+<p>Image to use:</p>
+
+<canvas onclick="cnvs_setCoordinates(event)" id="coordiv" width="800" height="600"  style="position:absolute;top:30px;left:100px;border:1px solid #c3c3c3" ></canvas>
+
+
+  
+<div id="xycoordinates2"></div>
+<div id="div1" style="position:absolute; top:400px;" >
+<p id="p1">map</p>
+<p id="p2">notes</p>
+</div>
+
+<script>
+ // var obj = { coordinates: [] };
+ var coordinates = [];
+ var json
+ var c = document.getElementById("coordiv");
+ var ctx = c.getContext("2d");
+ var img = new Image();
+ img.src = "images/flag.png";
+ var tut = 0 ;
+ var i = 0;
+ var stored_coordinates;
+
+function get_img(tut){
+    if(tut == 1) {
+      img.src = "images/flag.png";
+      }
+    if(tut == 2) {
+      img.src = "images/point.png";
+      }
+    if(tut == 3) {
+      img.src = "images/car.png";
+      }
+  }
+function cnvs_setCoordinates(event){
+  var rect = c.getBoundingClientRect();
+  var x = event.clientX-rect.left-4;
+  var y = event.clientY-rect.top-4;
+  var coords = "X coords: " + x + ", Y coords: " + y;
+  document.getElementById("xycoordinates2").innerHTML=coords;
+
+  var myobj = {'x':'','y':'', 'type':'','info':''};
+  myobj.x = x;
+  myobj.y = y;
+  myobj.type = tut;
+  myobj.info =  prompt("info gir");
+ 
+  coordinates.push(myobj);
+  json = JSON.stringify(coordinates);
+  axios.post('/test',{params:{filename:"myjsonfile"},data:json})
+      .then(response => { 
+          console.log(response.data)
+        })
+      .catch(error => {
+            console.log(error.response)
+        });
+  i++;
+
+  localStorage.setItem("coordinates", JSON.stringify(coordinates));
+
+  get_img(tut);
+  ctx.drawImage(img,x,y);
+
+ }
+function get_coordinates(){
+  axios.get('/coco').then(resp => {
+    //console.log(resp.data);
+    for(i=0;i<resp.data.length;i++)
+    {
+      console.log(resp.data[i]);
+      get_img(resp.data[i].type);
+      ctx.drawImage(img,resp.data[i].x,resp.data[i].y);
+      var para = document.createElement("p");
+      para.onclick = cnvs_clearCoordinates;
+      var node = document.createTextNode(resp.data[i].info + "x  x" +resp.data[i].type );
+      para.appendChild(node);
+      var element = document.getElementById("div1");
+      element.appendChild(para);
+    };
+  }).catch(error => {
+    console.log(error.response)
+  });
+  }
+
+function addpoints(){
+   stored_coordinates = JSON.parse(localStorage.getItem("coordinates"));
+  for(i=0; i<stored_coordinates.length; i++)
+   {
+    console.log(stored_coordinates[i]);
+    ctx.drawImage(get_img(stored_coordinates[i].type),stored_coordinates[i].x,stored_coordinates[i].y);
+   }
+ }
+
+
+
+function cnvs_clearCoordinates()
+{
+console.log("out out ");
+}
+function choseone(){
+tut = 1 ; 
+console.log(tut);
+}
+function choseone2(){
+tut = 2 ; 
+console.log(tut);
+}
+function choseone3(){
+tut = 3 ; 
+console.log(tut);
+}
+</script>
+</body>
+</html>
