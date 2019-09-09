@@ -8,6 +8,8 @@
     <button onclick="addpoints()"> PathFinder</button>
     <button onclick="get_coordinates()"> GetCoordinates</button>
      <button onclick="clear_points()"> ClearMarkers</button>
+     <button onclick="getLocation()">GPS Coordination</button>
+     <button onclick="addrobot()">canvasrobocontrol</button>
      </div>
   <div id="button-box"  style="background-color:darkgray;width:max-content;height:max-content;padding:10px; " >
     <div onclick="choseone(event)"> 
@@ -23,14 +25,15 @@
 
 
 
-<canvas onclick="cnvs_setCoordinates(event)" id="coordiv" width="800" height="600"  style="position:absolute;top:30px;left:250px;border:1px solid #c3c3c3" ></canvas>
+<canvas onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:30px;left:60px;border:1px solid #c3c3c3" ></canvas>
 
-
+<canvas onclick="cnvs_setCoordinates(event)" id="coordivrobo" width="600" height="428"  style="position:absolute;top:30px;left:800px;border:1px solid #c3c3c3" ></canvas>
   
 <div id="xycoordinates2"></div>
-<div id="div1" style="position:absolute; top:400px;background-color:lightcoral;" >
-<p id="p1">map</p>
+<div id="div1" style="position:absolute; top:500px;background-color:lightcoral; width: 110px; height:110px;overflow:scroll;" >
+<p id="p1">map 1 pixel  = 0,3125  m</p>
 <p id="p2">notes</p>
+<p id="demo"></p>
 </div>
 
 <script>
@@ -38,7 +41,9 @@
  var coordinates = [];
  var json
  var c = document.getElementById("coordiv");
+ var cr = document.getElementById("coordivrobo");
  var ctx = c.getContext("2d");
+ var ctr = cr.getContext("2d");
  var img = new Image();
  var img2 = new Image();
  img.src = "images/flag.png";
@@ -46,6 +51,37 @@
  var tut = 0 ;
  var i = 0;
  var stored_coordinates;
+function addrobot() { 
+
+  axios.get('/coco').then(resp => {
+    //console.log(resp.data);
+    ctr.drawImage(img2,0,0);
+     ctr.moveTo(resp.data[0].x, resp.data[0].y);
+     for(i=1;i<resp.data.length;i++)
+    {
+       ctr.lineTo(resp.data[i].x, resp.data[i].y);
+    }
+            ctr.closePath();
+            ctr.stroke();
+           
+    for(i=0;i<resp.data.length;i++)
+    {
+              console.log(resp.data[i]);
+              get_img(resp.data[i].type);
+              ctr.drawImage(img,resp.data[i].x-40,resp.data[i].y-60);
+              var para = document.createElement("p");
+              para.onclick = cnvs_clearCoordinates;
+              var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
+              para.appendChild(node);
+              var element = document.getElementById("div1");
+              element.appendChild(para);
+    };
+   
+  }).catch(error => {
+    console.log(error.response)
+  });
+  }
+
 
 
 function get_img(tut){
@@ -64,6 +100,41 @@ function get_img(tut){
   ctx.drawImage(img2,0,0);
   console.log(c.width,c.height);
   }
+  var x = document.getElementById("demo");
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+//******************************
+
+		/*	function showDistance(lat1, long1, lat2, long2) {
+				var distance = distanceInKmBetweenEarthCoordinates(lat1, long1, lat2, long2);
+				var distance_mile = distance * 0.62137119224;
+				var distance_nautical_miles = distance * 0.539957;
+				var distance_meters = distance * 1000;
+				document.getElementById('distance').innerHTML = "The distance is between the two gps coordinates is <br /><b>"+ distance.toFixed(2) +"</b> KM or <br /><b>"+distance_mile.toFixed(2)+"</b> Miles or <br /><b>"+distance_nautical_miles.toFixed(2)+"</b> Nautical miles or <br /><b>"+distance_meters.toFixed(2)+"</b> meters";
+			}
+function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+  var p = 0.017453292519943295;    // Math.PI / 180
+  var c = Math.cos;
+  var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+          c(lat1 * p) * c(lat2 * p) * 
+          (1 - c((lon2 - lon1) * p))/2;
+
+  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+}*/
+
+
+
+//****************************
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}
 function cnvs_setCoordinates(event){
   var rect = c.getBoundingClientRect();
   var x = event.clientX-rect.left-4;
