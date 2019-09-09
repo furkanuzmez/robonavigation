@@ -10,6 +10,7 @@
      <button onclick="clear_points()"> ClearMarkers</button>
      <button onclick="getLocation()">GPS Coordination</button>
      <button onclick="addrobot()">canvasrobocontrol</button>
+     <button onclick="robotdirection()">robot direction</button>
      </div>
   <div id="button-box"  style="background-color:darkgray;width:max-content;height:max-content;padding:10px; " >
     <div onclick="choseone(event)"> 
@@ -46,16 +47,49 @@
  var ctr = cr.getContext("2d");
  var img = new Image();
  var img2 = new Image();
+ var robot = new Image();
  img.src = "images/flag.png";
  img2.src = "images/unimap.jpg";
+ 
  var tut = 0 ;
  var i = 0;
  var stored_coordinates;
+ var counter;
+ function robotdirection() {
+ for(counter =0;counter<4;counter++) {
+if ( tut == 1) 
+{ 
+robot.src = "images/robo-left.png";
+ctr.clearRect(0, 0, cr.width, cr.height);
+console.log( tut);
+ctr.drawImage(robot,200,100);
+}
+ if ( tut == 2 ) 
+{ 
+  robot.src = "images/robo-right.png";
+  ctr.clearRect(0, 0, cr.width, cr.height);
+  console.log( tut);
+  ctr.drawImage(robot,200,100);
+}
+if (tut == 3) 
+{ 
+   robot.src = "images/robo-left.png";
+   ctr.clearRect(0, 0, cr.width, cr.height);
+   console.log( tut);
+   ctr.drawImage(robot,200,100);
+}
+
+console.log(tut);
+
+ }
+ }
 function addrobot() { 
 
   axios.get('/coco').then(resp => {
     //console.log(resp.data);
-    ctr.drawImage(img2,0,0);
+    
+    ctr.drawImage(robot,0,0);
+   
      ctr.moveTo(resp.data[0].x, resp.data[0].y);
      for(i=1;i<resp.data.length;i++)
     {
