@@ -11,13 +11,15 @@
      <button onclick="getLocation()">GPS Coordination</button>
      <button onclick="addrobot()">canvasrobocontrol</button>
      <button onclick="robotdirection()">robot direction</button>
+     <button onclick="robotstart()">robot start</button>
+       <button id="test" onclick="test()">Ready</button>
      </div>
   <div id="button-box"  style="background-color:darkgray;width:max-content;height:max-content;padding:10px; " >
     <div onclick="choseone(event)"> 
   <img src="images/flag.png" alt="Smiley face" height="24" width="24">
    </div> 
   <div onclick="choseone2(event)"> 
-  <img src="images/point.png" alt="Smiley face" height="24" width="24">
+  <img src="images/marker.png" alt="Smiley face" height="24" width="24">
    </div> 
 <div onclick="choseone3(event)"> 
   <img src="/images/car.png" alt="Smiley face" height="24" width="24">
@@ -40,7 +42,7 @@
 <script>
  // var obj = { coordinates: [] };
  var coordinates = [];
- var json
+ var json;
  var c = document.getElementById("coordiv");
  var cr = document.getElementById("coordivrobo");
  var ctx = c.getContext("2d");
@@ -48,41 +50,151 @@
  var img = new Image();
  var img2 = new Image();
  var robot = new Image();
- img.src = "images/flag.png";
- img2.src = "images/unimap.jpg";
- 
+                                                                  img.src = "images/flag.png";
+                                                                  img2.src = "images/unimap.jpg";
+                                                                  robot.src = "images/robotvac.png";
  var tut = 0 ;
  var i = 0;
  var stored_coordinates;
- var counter;
+ var counter=0;
+var getcor = []
+ var bank = {'x':'','y':'', 'type':'','info':''};
  function robotdirection() {
- for(counter =0;counter<4;counter++) {
-if ( tut == 1) 
+ var tekrar= setInterval(function(){
+     if ( tut == 1) 
 { 
-robot.src = "images/robo-left.png";
+robot.src = "images/roboleft.png";
 ctr.clearRect(0, 0, cr.width, cr.height);
-console.log( tut);
-ctr.drawImage(robot,200,100);
+//console.log( tut);
+ctr.drawImage(robot,counter,100);
 }
  if ( tut == 2 ) 
 { 
-  robot.src = "images/robo-right.png";
+  robot.src = "images/roboright.png";
   ctr.clearRect(0, 0, cr.width, cr.height);
-  console.log( tut);
-  ctr.drawImage(robot,200,100);
+//  console.log( tut);
+  ctr.drawImage(robot,counter,100);
 }
 if (tut == 3) 
 { 
-   robot.src = "images/robo-left.png";
+   robot.src = "images/roboleft.png";
    ctr.clearRect(0, 0, cr.width, cr.height);
-   console.log( tut);
-   ctr.drawImage(robot,200,100);
+  // console.log( tut);
+   ctr.drawImage(robot,counter,100);
 }
 
 console.log(tut);
+console.log(counter);
+counter= counter+1;
+ if(counter == 100 )
+  {
+   clearInterval(tekrar);
+  
+  
+  }
+
+  }, 50);
+
+
 
  }
+
+ function robotstart(){
+   
+axios.get('/coco').then(resp => {
+    var k = 0 ; 
+    for(k=0;k<=resp.data.length;k++){
+        bank[k] = resp.data[k];
+        getcor.push(bank[k]);
+        console.log(getcor[k]);
+         console.log(resp.data.length);
+    }
+    
+   document.getElementById("test").style.backgroundColor ="#34eb6e";  
+  
+  }).catch(error => {
+    console.log(error.response)
+  });
+     console.log(getcor[0]," point");
+     console.log(getcor[1]," point");
+     console.log(getcor[2]," point");
  }
+
+function test() {
+  var xcounter = 0;
+  var ycounter = 0;
+  var cox;
+  var coy; 
+  var distance = 0 ;
+  var rox =0 ;
+  var roy = 0;
+  var absolutexc = 0;
+  var coup = 0;
+  var cop ;
+  var shiftx = 100;
+  var shifty= 75;
+  var gogo = setInterval(function(){
+      
+      cox = getcor[coup+1].x - getcor[coup].x;
+      coy = getcor[coup+1].y - getcor[coup].y;
+      distance   = Math.sqrt((cox*cox)+(coy*coy));
+    if( distance > absolutexc )
+    { 
+      
+      rox = xcounter + getcor[coup].x-10;
+      roy = ycounter + getcor[coup].y-10;
+        
+       
+      ctr.clearRect(20, 20, cr.width+100, cr.height+100);
+      for(var c = 0;c<getcor.length-1;c++)
+      {
+        ctr.beginPath();
+ctr.arc(shiftx+(80*(c-2)), shifty, 25, 0, 2 * Math.PI);
+ctr.stroke();
+   ctr.beginPath();
+ctr.arc(shiftx+(80*(c-2)), shifty+100, 25, 0, 2 * Math.PI);
+ctr.stroke();
+   ctr.beginPath();
+ctr.arc(shiftx+(80*(c-2)), shifty+200, 25, 0, 2 * Math.PI);
+ctr.stroke();
+   ctr.beginPath();
+ctr.arc(shiftx+(80*(c-2)), shifty+300, 25, 0, 2 * Math.PI);
+ctr.stroke();
+ctr.drawImage(img,getcor[c].x,getcor[c].y);
+    
+      }
+         
+      ctr.drawImage(robot,rox,roy);
+      xcounter = xcounter + cox/distance;
+      ycounter = ycounter + coy/distance;
+     absolutexc = Math.abs(xcounter);
+       console.log("gogo",distance,xcounter,ycounter,rox,roy);
+       console.log("arraylegth",getcor.length,coup);
+      if ( absolutexc > distance) { 
+
+      coup = coup + 1;
+      xcounter = 0 ;
+      ycounter = 0;
+      absolutexc = 0;
+        console.log("gogo",distance,xcounter,ycounter,rox,roy);
+    }
+    }
+        if(coup == getcor.length-2) {
+          clearInterval(gogo);
+        }
+  
+    
+   
+  
+},60);
+  
+
+}
+
+
+
+
+
 function addrobot() { 
 
   axios.get('/coco').then(resp => {
@@ -123,7 +235,7 @@ function get_img(tut){
       img.src = "images/flag.png";
       }
     if(tut == 2) {
-      img.src = "images/point.png";
+      img.src = "images/marker.png";
       }
     if(tut == 3) {
       img.src = "images/car.png";
@@ -215,7 +327,7 @@ function get_coordinates(){
     {
               console.log(resp.data[i]);
               get_img(resp.data[i].type);
-              ctx.drawImage(img,resp.data[i].x-40,resp.data[i].y-60);
+              ctx.drawImage(img,resp.data[i].x-16,resp.data[i].y-32);
               var para = document.createElement("p");
               para.onclick = cnvs_clearCoordinates;
               var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
