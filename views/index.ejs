@@ -1,39 +1,88 @@
 <!DOCTYPE html>
-
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<style>
+.but{
+  background-color: #0f1010;
+    color: azure;   
+     height: 40px;
+}
+
+
+</style>
 <html>
  
-<body  onload="get_coordinates()">
-  <div id="button-box"  style="background-color: lawngreen;width:max-content;" >
-    <button onclick="addpoints()"> PathFinder</button>
-    <button onclick="get_coordinates()"> GetCoordinates</button>
-     <button onclick="clear_points()"> ClearMarkers</button>
-     <button onclick="getLocation()">GPS Coordination</button>
-     <button onclick="addrobot()">canvasrobocontrol</button>
-     <button onclick="robotdirection()">robot direction</button>
-     <button onclick="robotstart()">robot start</button>
-       <button id="test" onclick="test()">Ready</button>
+<body  onload="get_coordinates()"style="background-color:white;width:max-content;">
+
+
+
+
+  <div id="button-box"    >
+    
+    <button class="btn btn-secondary btn-lg " onclick="get_coordinates()"> Get_Coordinates</button>
+
+     <button class="btn btn-secondary btn-lg" onclick="clear_points()"> Clear-Markers</button>
+     <button class="btn btn-secondary btn-lg"  onclick="change()">Change Image</button>
+      <button class="btn btn-secondary btn-lg"  onclick="change()">Change Image</button>
+      <button class="btn btn-secondary btn-lg"  onclick="clearmessages()">Clear-Messages</button>
+     <button class="btn btn-secondary btn-lg"  onclick="robotstart()">Robot -start</button>
+       <button class="btn btn-secondary btn-lg"  id="test" onclick="Ready()">Ready</button>
+        <button class="btn btn-secondary btn-lg"  id="scalemap" onclick="scalemap()">Scalemap</button>
+       
+            <button class="btn btn-secondary btn-lg"  id="modeselecet" onclick="cember()">CircleMode</button>
+            <button class="btn btn-secondary btn-lg"  id="modeselecet" onclick="randomode()">Random</button>
+                <button class="btn btn-secondary btn-lg"  id="repeater" onclick="repeat()">Repeat</button>
      </div>
-  <div id="button-box"  style="background-color:darkgray;width:max-content;height:max-content;padding:10px; " >
-    <div onclick="choseone(event)"> 
+  <div id="button-box"  style="border:1px solid #FFC312;background-color:#0f1010;width:max-content;height:max-content;padding:2px;position: absolute;left:3px;top:60px; " >
+    <div onclick="choseone(event)" style="border:1px solid azure;"> 
   <img src="images/flag.png" alt="Smiley face" height="24" width="24">
    </div> 
-  <div onclick="choseone2(event)"> 
+  <div onclick="choseone2(event)" style="border:1px solid azure;">  
   <img src="images/marker.png" alt="Smiley face" height="24" width="24">
    </div> 
-<div onclick="choseone3(event)"> 
-  <img src="/images/car.png" alt="Smiley face" height="24" width="24">
+<div onclick="choseone3(event)" style="border:1px solid azure;"> 
+  <img src="/images/check.png" alt="Smiley face" height="24" width="24">
+   </div> 
+   <div onclick="choseone3(event)" style="border:1px solid azure;"> 
+  <img src="/images/targetgelb.png" alt="Smiley face" height="24" width="24">
    </div> 
     </div>
 
 
 
-<canvas onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:30px;left:60px;border:1px solid #c3c3c3" ></canvas>
+<canvas  onmousemove="sendmes(event)" onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:60px;left:35px;border:1px solid #c3c3c3" ></canvas>
 
-<canvas onclick="cnvs_setCoordinates(event)" id="coordivrobo" width="600" height="428"  style="position:absolute;top:30px;left:800px;border:1px solid #c3c3c3" ></canvas>
-  
-<div id="xycoordinates2"></div>
-<div id="div1" style="position:absolute; top:500px;left:0px;background-color:azure;padding: 10px; width: 99%; height:200px;overflow:scroll;border:solid black 2px;" >
+<canvas onclick="cnvs_setCoordinates(event)" id="coordivrobo" width="600" height="428" style=" background-color:black;position:absolute;top:60px;left:640px;border:1px solid #c3c3c3" ></canvas>
+ <div style="border:1px solid gray;width:100px;background-color: azure;position:absolute;left:1250px;top:60px;opacity: 0.9;"> 
+ W :  <input id="w-values" type="text" name="width" value="600" style="border:1px solid gray;width:80px;"   > <br>
+ H :  <input id="h-values"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
+ <p>Vehicle Properties</p><br>
+ Tyres  :  <input id="tyres"  type="text" name="tyres" value="0.8" style="border:1px solid gray;width:80px;" ><br> 
+    </div>
+     <div style="position:absolute;border:1px solid gray;width:200px;background-color:white;left:1355px;top:60px; ">
+ R-Distace   <br> <input id="rdistance" type="text" name="width" value="600" style="border:1px solid gray;width:80px;">  <br>
+ V-Distance  <br>  <input id="vdistance" type="text" name="width" value="600" style="border:1px solid gray;width:80px;"> <br>
+ Rox         <br> <input id="rox"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
+ Roy         <br> <input id="roy"  type="text" name="tyres" value="0.8" style="border:1px solid gray;width:80px;" ><br> 
+ Encoder     <br> <input id="encoder" type="text" name="encoder" value="600" style="border:1px solid gray;width:80px;"   > <br>
+ Checkpoint  <br> <input id="checkpoint" type="text" name="checkpoint" value="start" style="border:1px solid gray;width:80px;"  > <br>
+<div id="checkdisplay" style=" font-size: 30px;text-align: center;">START 
+ 
+</div>
+
+<div style="background-color:#FFC312;position:absolute;top:102%;left:0%;width:100%;">
+  <img  id="foto" src="" alt="Smiley face" height="200" width="200" style="position:fixed;left:50%;top:800px;z-index:5;">
+</div>
+
+    </div>
+<div id="xycoordinates2" style =  " background-color:black;  color:springgreen;position:absolute;top:63px;left:150px;"> </div>
+<div id="div2" style="position:absolute; top:500px;left:0px;background-color:white;padding:10px;width:80%;height:200px;overflow:scroll;border:solid black 2px;" >
+<p >  map messages</p>
+
+
+</div>
+
+<div id="div1" style="position:absolute; top:800px;left:0px;background-color:white;padding:10px;width:80%;height:200px;overflow:scroll;border:solid black 2px;" >
 <p id="p1">  map 1 pixel  = 0,3125  m</p>
 <p id="p2">  notes /* GPS scaling <br>
 encoder calculations , 
@@ -53,15 +102,135 @@ motor directions,
  var img = new Image();
  var img2 = new Image();
  var robot = new Image();
+  var signal = new Image();
+  var target = new Image();
+                                                                  // image sources
                                                                   img.src = "images/flag.png";
-                                                                  img2.src = "images/unimap.jpg";
-                                                                  robot.src = "images/robotvac.png";
+                                                                  img2.src = "images/turkey.jpg";
+                                                                  robot.src = "images/robo2.png";
+                                                                  signal.src = "images/check.png";
+                                                                  target.src = "images/circle.png";
  var tut = 0 ;
  var i = 0;
  var stored_coordinates;
  var counter=0;
 var getcor = []
  var bank = {'x':'','y':'', 'type':'','info':''};
+var picsel = 1 ;
+var tyre = 1;
+
+function sendmes(event) {
+   var rect = c.getBoundingClientRect();
+  var r = event.clientX-rect.left-4;
+  var p = event.clientY-rect.top-4;
+  var coor = "Coordinates: (" + r + "," + p + ")";
+  
+ for (f = 0 ; f <=getcor.length;f++)
+
+  { 
+       
+     if(Math.sqrt((getcor[f].x-r) ** 2 + (getcor[f].y-16-p) ** 2) < 14) 
+     {
+  
+console.log("my parker" + f ); 
+     console.log("corx");
+           console.log((getcor[f].x));
+             console.log("r values");
+           console.log(r);
+              console.log("cory");
+            console.log((getcor[f].y));
+               console.log(" p values");
+           console.log(p);
+         alert("marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
+         var para = document.createElement("p");
+              para.style.backgroundColor = "yellow";
+            var node = document.createTextNode( "marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
+              para.appendChild(node);
+              var element = document.getElementById("div2");
+              element.appendChild(para);
+           break;
+     }
+
+     else { 
+
+       console.log("not matched");
+        console.log("corx");
+           console.log((getcor[f].x));
+             console.log("r values");
+           console.log(r);
+              console.log("cory");
+            console.log((getcor[f].y));
+               console.log(" p values");
+           console.log(p);
+          
+     }
+   
+   
+
+  }
+
+}
+function clearmessages()
+{
+   var list = document.getElementById("div2"); 
+     // Get the <ul> element with id="myList"
+     var c = document.getElementById("div2").children.length;
+     console.log(c);
+     for ( h = 1 ; h <= c; h++) {
+
+          list.removeChild(list.childNodes[h]); 
+      }
+         var para = document.createElement("p");
+              
+            var node = document.createTextNode( "map messages");
+              para.appendChild(node);
+              var element = document.getElementById("div2");
+              element.appendChild(para);
+}
+function scalemap()
+{
+  var w = document.getElementById("w-values").value;
+  var h = document.getElementById("h-values").value;
+   tyre = document.getElementById("tyres").value;
+   picsel = w / 600 ;
+  console.log( "w = "+ w ,"h = " + h , picsel,"tyre 2pir = " + tyre);
+}
+function change()
+{
+  img2.src ="images/2dshapes.png";
+}
+function cember() {
+  let number = 12; // how many number to be placed
+let size = 260; // size of circle i.e. w = h = 260
+let cx= size/2; // center of x(in a circle)
+let cy = size/2; // center of y(in a circle)
+let r = size/2; // radius of a circle
+
+for(let i=1; i<=number; i++) {
+  let ang = i*(Math.PI/(number/2));
+  let left = cx + (r*Math.cos(ang));
+  let top = cy + (r*Math.sin(ang));
+    ctr.drawImage(target,left+150,top+75);
+  console.log("top: ", top, ", left: ", left);
+}
+}
+function randomode() {
+
+ let number = 8; // how many number to be placed
+let size = 260; // size of circle i.e. w = h = 260
+let cx= size/2; // center of x(in a circle)
+let cy = size/2; // center of y(in a circle)
+let r = size/2; // radius of a circle
+
+for(let i=1; i<=number; i++) {
+  var rastx = i*20 ;
+  var rasty = Math.floor((Math.random() * 400) + 1);
+ 
+    ctr.drawImage(target,rastx,rasty);
+  console.log("top: ", rastx, ", left: ", rasty);
+}
+}
+
  function robotdirection() {
  var tekrar= setInterval(function(){
      if ( tut == 1) 
@@ -96,7 +265,7 @@ counter= counter+1;
   
   }
 
-  }, 50);
+  }, 10);
 
 
 
@@ -123,7 +292,16 @@ axios.get('/coco').then(resp => {
      console.log(getcor[2]," point");
  }
 
-function test() {
+ function repeat() {
+
+  Ready();
+ 
+
+
+ }
+
+function Ready() {
+  var repx = 0 ;  
   var xcounter = 0;
   var ycounter = 0;
   var cox;
@@ -136,19 +314,36 @@ function test() {
   var cop ;
   var shiftx = 100;
   var shifty= 75;
+  var repoint =0; 
+  repoint = prompt("REPEAT MOTION");
+document.getElementById("checkdisplay").innerText ="Active";
   var gogo = setInterval(function(){
       
       cox = getcor[coup+1].x - getcor[coup].x;
       coy = getcor[coup+1].y - getcor[coup].y;
+     console.log('______distances____')
+     console.log(getcor[coup+1].x,getcor[coup].x);
+     console.log(getcor[coup+1].y,getcor[coup].y);
+     console.log(cox);
+     console.log(coy);
       distance   = Math.sqrt((cox*cox)+(coy*coy));
-    if( distance > absolutexc )
+    if( distance >= absolutexc )
     { 
       
       rox = xcounter + getcor[coup].x-10;
       roy = ycounter + getcor[coup].y-10;
-        
+          if(coup == 0) {
+      document.getElementById("foto").src ="/images/tr1.jpg";
+    }
+    else if(coup == 1) {
+      document.getElementById("foto").src ="/images/tr2.jpg";
+    }
+     else if(coup ==2) {
+      document.getElementById("foto").src ="/images/tr3.jpg";
+    }
        
-      ctr.clearRect(20, 20, cr.width+100, cr.height+100);
+      ctr.clearRect(0, 0, cr.width+100, cr.height+100);
+       ctr.drawImage(img2,0,0);
       for(var c = 0;c<getcor.length-1;c++)
       {
       /*  ctr.beginPath();
@@ -163,34 +358,60 @@ ctr.stroke();
    ctr.beginPath();
 ctr.arc(shiftx+(80*(c-2)), shifty+300, 25, 0, 2 * Math.PI);
 ctr.stroke();*/
-ctr.drawImage(img,getcor[c].x-10,getcor[c].y);
+ctr.drawImage(target,getcor[c].x-10,getcor[c].y);
     
       }
-         
       ctr.drawImage(robot,rox,roy);
+     
       xcounter = xcounter + cox/distance;
       ycounter = ycounter + coy/distance;
      absolutexc = Math.sqrt((xcounter*xcounter)+(ycounter*ycounter));
-    
-       console.log("gogo",distance,xcounter,ycounter,rox,roy);
-       console.log("arraylegth",getcor.length,coup);
-      if ( absolutexc > distance) { 
+     console.log('________ABSOLUTEXC______________');
+     console.log(absolutexc);
+     console.log(distance);
 
+     var     realval  =  distance * picsel ;
+     var    encoder = realval / tyre ;
+       console.log("real distance = ",realval,"encoder = ",encoder,"distance = ",distance,xcounter,ycounter,rox,roy);
+      
+      if ( absolutexc >= distance) { 
+         
+      ctr.drawImage(signal,40,40);
+  document.getElementById("checkpoint").value =(coup+1).toFixed(0);
+    document.getElementById("checkdisplay").innerText =(coup+1).toFixed(0);
+    var rnd = Math.random()*10;
+  
+     console.log("RANDOM");
+    console.log(rnd);
       coup = coup + 1;
       xcounter = 0;
       ycounter = 0;
       absolutexc = 0;
         console.log("gogo",distance,xcounter,ycounter,rox,roy);
-    }
-    }
-        if(coup == getcor.length-3) {
-          clearInterval(gogo);
+          if(coup == getcor.length-2 && repx < repoint) {
+          coup = 0 ;
+          repx++;
+   
+   
         }
-  
-    
+    }
+    }
+
+        if(coup == getcor.length-2) {
+          clearInterval(gogo);
+        
+   
+   
+        }
+    document.getElementById("rdistance").value = realval;   
+    document.getElementById("vdistance").value = distance;   
+    document.getElementById("rox").value =rox;   
+    document.getElementById("roy").value =roy;   
+    document.getElementById("encoder").value = encoder;   
+      console.log("arraylegth",getcor.length,coup+1);
    
   
-},20);
+},10);
   
 
 }
@@ -221,7 +442,8 @@ function addrobot() {
               ctr.drawImage(img,resp.data[i].x-40,resp.data[i].y-60);
               var para = document.createElement("p");
               para.onclick = cnvs_clearCoordinates;
-              var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
+              var node = document.createTextNode( "Point" +i+"  "+resp.data[i].info +"  "+resp.data[i].type);
+              console.log("point bilgi");
               para.appendChild(node);
               var element = document.getElementById("div1");
               element.appendChild(para);
@@ -291,12 +513,12 @@ function cnvs_setCoordinates(event){
   var y = event.clientY-rect.top-4;
   var coords = "X coords: " + x + ", Y coords: " + y;
   document.getElementById("xycoordinates2").innerHTML=coords;
-
+ 
   var myobj = {'x':'','y':'', 'type':'','info':''};
   myobj.x = x;
   myobj.y = y;
   myobj.type = tut;
-  myobj.info =  prompt("info gir");
+  myobj.info =  prompt("command");
  
   coordinates.push(myobj);
   json = JSON.stringify(coordinates);
@@ -312,16 +534,20 @@ function cnvs_setCoordinates(event){
   localStorage.setItem("coordinates", JSON.stringify(coordinates));
 
   get_img(tut);
-  ctx.drawImage(img,x,y);
+  ctx.drawImage(img,x-8,y-21);
 
  }
 function get_coordinates(){
+  
   axios.get('/coco').then(resp => {
     //console.log(resp.data);
     ctx.drawImage(img2,0,0);
      ctx.moveTo(resp.data[0].x, resp.data[0].y);
+     ctx.setLineDash([6, 8]);/*dashes are 5px and spaces are 3px*/
+     ctx.strokeStyle = "cyan";
+     ctx.lineWidth = 3;
      for(i=1;i<resp.data.length;i++)
-    {
+    {  
        ctx.lineTo(resp.data[i].x, resp.data[i].y);
     }
             ctx.closePath();
@@ -331,10 +557,10 @@ function get_coordinates(){
     {
               console.log(resp.data[i]);
               get_img(resp.data[i].type);
-              ctx.drawImage(img,resp.data[i].x-16,resp.data[i].y-32);
+              ctx.drawImage(img,resp.data[i].x-8,resp.data[i].y-21);
               var para = document.createElement("p");
               para.onclick = cnvs_clearCoordinates;
-              var node = document.createTextNode(resp.data[i].info + "  " +resp.data[i].type );
+            var node = document.createTextNode( "Point  "    +i+"  "+resp.data[i].info +"  "+resp.data[i].type);
               para.appendChild(node);
               var element = document.getElementById("div1");
               element.appendChild(para);
