@@ -71,7 +71,7 @@
 </div>
 
 <div style="background-color:#FFC312;position:absolute;top:102%;left:0%;width:100%;">
-  <img  id="foto" src="" alt="Smiley face" height="200" width="200" style="position:fixed;left:50%;top:800px;z-index:5;">
+  <img  id="foto" src="images/babam.jpg" alt="Smiley face" height="200" width="200" style="position:fixed;left:650px;top:330px;z-index:5;">
 </div>
 
     </div>
@@ -141,7 +141,10 @@ console.log("my parker" + f );
             console.log((getcor[f].y));
                console.log(" p values");
            console.log(p);
-         alert("marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
+           var pic = "/images/"+getcor[f].info+".jpg";
+           console.log("images name of point");
+           console.log(pic);
+         document.getElementById("foto").src =pic;
          var para = document.createElement("p");
               para.style.backgroundColor = "yellow";
             var node = document.createTextNode( "marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
