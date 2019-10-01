@@ -70,13 +70,17 @@
  
 </div>
 
-<div style="background-color:#FFC312;position:absolute;top:102%;left:0%;width:100%;">
-  <img  id="foto" src="images/babam.jpg" alt="Smiley face" height="200" width="200" style="position:fixed;left:650px;top:330px;z-index:5;">
+<div id="webmap" style="background-color:black;position:fixed;top:500px;left:35%;width:25%;height:auto;z-index:5;opacity:0.9; ">
+  <h6 style="color:whitesmoke;"> Turkıye</h6>
+  <img  id="foto" src="images/babam.jpg" alt="Smiley face" height="200" width="200" style="left:30px;top:0px;z-index:5;">
+  <input id="city"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
+   <h6 style="color:whitesmoke;">City Information</h6>
+  
 </div>
 
     </div>
 <div id="xycoordinates2" style =  " background-color:black;  color:springgreen;position:absolute;top:63px;left:150px;"> </div>
-<div id="div2" style="position:absolute; top:500px;left:0px;background-color:white;padding:10px;width:80%;height:200px;overflow:scroll;border:solid black 2px;" >
+<div id="div2" style="position:absolute; top:500px;left:0px;background-color:white;padding:10px;width:30%;height:200px;overflow:scroll;border:solid black 2px;" >
 <p >  map messages</p>
 
 
@@ -131,7 +135,7 @@ function sendmes(event) {
        
      if(Math.sqrt((getcor[f].x-r) ** 2 + (getcor[f].y-16-p) ** 2) < 14) 
      {
-  
+ 
 console.log("my parker" + f ); 
      console.log("corx");
            console.log((getcor[f].x));
@@ -145,17 +149,26 @@ console.log("my parker" + f );
            console.log("images name of point");
            console.log(pic);
          document.getElementById("foto").src =pic;
+         document.getElementById("city").value =getcor[f].info;
          var para = document.createElement("p");
               para.style.backgroundColor = "yellow";
             var node = document.createTextNode( "marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
               para.appendChild(node);
               var element = document.getElementById("div2");
-              element.appendChild(para);
+              element.appendChild(para);  
+              var webdiv =   document.getElementById("webmap");
+              webdiv.style.visibility="visible";
+              webdiv.style.position = "fixed";
+              webdiv.style.top = "200px";
+                webdiv.style.left ="100px";
+              //**************
+            
            break;
      }
 
      else { 
-
+         var element = document.getElementById("webmap");
+             element.style.visibility="hidden";
        console.log("not matched");
         console.log("corx");
            console.log((getcor[f].x));
@@ -336,13 +349,13 @@ document.getElementById("checkdisplay").innerText ="Active";
       rox = xcounter + getcor[coup].x-10;
       roy = ycounter + getcor[coup].y-10;
           if(coup == 0) {
-      document.getElementById("foto").src ="/images/tr1.jpg";
+      document.getElementById("foto").src ="/images/istanbul.jpg";
     }
     else if(coup == 1) {
-      document.getElementById("foto").src ="/images/tr2.jpg";
+      document.getElementById("foto").src ="/images/nevsehir.jpg";
     }
      else if(coup ==2) {
-      document.getElementById("foto").src ="/images/tr3.jpg";
+      document.getElementById("foto").src ="/images/mardin.jpg";
     }
        
       ctr.clearRect(0, 0, cr.width+100, cr.height+100);
