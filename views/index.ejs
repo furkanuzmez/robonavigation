@@ -7,23 +7,68 @@
     color: azure;   
      height: 40px;
 }
+.zoom {
+  padding: 0px;
+  background-color: white;
+  transition: transform .2s; /* Animation */
+ 
+  margin: 0 auto;
+}
 
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.addcoment { 
+
+ position:absolute; 
+ visibility: hidden;
+ top:20%;
+ left:40%;
+ z-index: 10 ;
+ background-color: white;
+ width:max-content;
+}
 </style>
 <html>
  
 <body  onload="get_coordinates()"style="background-color:white;width:max-content;">
 
+<div class="addcoment" id="commentbox">
+ Comment  <br> <input id="name" type="text" name="name" value="" style="border:1px solid gray;width:80px;"  > <br>
+ Location  <br> <input id="address" type="text" name="address" value="" style="border:1px solid gray;width:80px;"  > <br>
+ INSERT  <br> <button class="btn btn-secondary btn-lg"  id="address"onclick="insertdb()">INSERTDB</button><br>
+  
+  
+  
+   </div>
 
 
-
-  <div id="button-box"    >
-    
+  <div id="button-box" style="width:auto;position:absolute;left:5%;top:10px;height:auto;background-color: floralwhite;padding:10px;"   >
+    <button class="btn btn-secondary btn-lg " onclick="commentbox()"> Comment</button>
     <button class="btn btn-secondary btn-lg " onclick="get_coordinates()"> Get_Coordinates</button>
 
      <button class="btn btn-secondary btn-lg" onclick="clear_points()"> Clear-Markers</button>
-     <button class="btn btn-secondary btn-lg"  onclick="change()">Change Image</button>
-      <button class="btn btn-secondary btn-lg"  onclick="change()">Change Image</button>
+     <button class="btn btn-secondary btn-lg"  onclick="change()">Change Map</button>
+      
       <button class="btn btn-secondary btn-lg"  onclick="clearmessages()">Clear-Messages</button>
      <button class="btn btn-secondary btn-lg"  onclick="robotstart()">Robot -start</button>
        <button class="btn btn-secondary btn-lg"  id="test" onclick="Ready()">Ready</button>
@@ -32,45 +77,58 @@
             <button class="btn btn-secondary btn-lg"  id="modeselecet" onclick="cember()">CircleMode</button>
             <button class="btn btn-secondary btn-lg"  id="modeselecet" onclick="randomode()">Random</button>
                 <button class="btn btn-secondary btn-lg"  id="repeater" onclick="repeat()">Repeat</button>
+                 <button class="btn btn-secondary btn-lg"  id="repeater" onclick="dbden()">database</button>
      </div>
-  <div id="button-box"  style="border:1px solid #FFC312;background-color:#0f1010;width:max-content;height:max-content;padding:2px;position: absolute;left:3px;top:60px; " >
-    <div onclick="choseone(event)" style="border:1px solid azure;"> 
-  <img src="images/flag.png" alt="Smiley face" height="24" width="24">
+  <div id="button-box"  style="border:1px solid greenyellow;background-color:whitesmoke;width:max-content;height:max-content;padding:2px;position: absolute;left:3px;top:60px; " >
+    <div class="zoom" onclick="choseone(event)" style="border:1px solid azure;"> 
+  <img src="images/pencil.png" alt="Smiley face" height="24" width="24">
    </div> 
-  <div onclick="choseone2(event)" style="border:1px solid azure;">  
+  <div class="zoom" onclick="choseone2(event)" style="border:1px solid azure;">  
   <img src="images/marker.png" alt="Smiley face" height="24" width="24">
    </div> 
-<div onclick="choseone3(event)" style="border:1px solid azure;"> 
-  <img src="/images/check.png" alt="Smiley face" height="24" width="24">
+<div class="zoom" onclick="choseone3(event)" style="border:1px solid azure;"> 
+  <img src="/images/bayrak.png" alt="Smiley face" height="24" width="24">
    </div> 
-   <div onclick="choseone3(event)" style="border:1px solid azure;"> 
-  <img src="/images/targetgelb.png" alt="Smiley face" height="24" width="24">
+   <div class="zoom" onclick="choseone3(event)" style="border:1px solid azure;"> 
+  <img src="/images/target.png" alt="Smiley face" height="24" width="24">
    </div> 
     </div>
 
 
 
-<canvas  onmousemove="sendmes(event)" onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:60px;left:35px;border:1px solid #c3c3c3" ></canvas>
+<canvas   onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:60px;left:35px;border:1px solid #c3c3c3;z-index:5;" ></canvas>
 
 <canvas onclick="cnvs_setCoordinates(event)" id="coordivrobo" width="600" height="428" style=" background-color:black;position:absolute;top:60px;left:640px;border:1px solid #c3c3c3" ></canvas>
- <div style="border:1px solid gray;width:100px;background-color: azure;position:absolute;left:1250px;top:60px;opacity: 0.9;"> 
+
+<div style="border:1px solid gray;position:absolute;left:1250px;top:65px;">
+             Information Display
+  <div style="width:100px;background-color: white;position:absolute;left:1px;top:60px;opacity: 0.9;"> 
  W :  <input id="w-values" type="text" name="width" value="600" style="border:1px solid gray;width:80px;"   > <br>
  H :  <input id="h-values"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
- <p>Vehicle Properties</p><br>
+
  Tyres  :  <input id="tyres"  type="text" name="tyres" value="0.8" style="border:1px solid gray;width:80px;" ><br> 
     </div>
-     <div style="position:absolute;border:1px solid gray;width:200px;background-color:white;left:1355px;top:60px; ">
+     <div style="position:absolute;width:200px;background-color:white;left:110px;top:60px; ">
  R-Distace   <br> <input id="rdistance" type="text" name="width" value="600" style="border:1px solid gray;width:80px;">  <br>
  V-Distance  <br>  <input id="vdistance" type="text" name="width" value="600" style="border:1px solid gray;width:80px;"> <br>
  Rox         <br> <input id="rox"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
  Roy         <br> <input id="roy"  type="text" name="tyres" value="0.8" style="border:1px solid gray;width:80px;" ><br> 
  Encoder     <br> <input id="encoder" type="text" name="encoder" value="600" style="border:1px solid gray;width:80px;"   > <br>
  Checkpoint  <br> <input id="checkpoint" type="text" name="checkpoint" value="start" style="border:1px solid gray;width:80px;"  > <br>
+  NAME  <br> <input id="name" type="text" name="name" value="start" style="border:1px solid gray;width:80px;"  > <br>
+   ADDRESS  <br> <input id="address" type="text" name="address" value="start" style="border:1px solid gray;width:80px;"  > <br>
+   INSERT  <br> <button class="btn btn-secondary btn-lg"  id="address"onclick="insertdb()">INSERTDB</button><br>
 <div id="checkdisplay" style=" font-size: 30px;text-align: center;">START 
+
  
 </div>
+  
+  
+  
+  
+   </div> 
 
-<div id="webmap" style="background-color:black;position:fixed;top:500px;left:35%;width:25%;height:auto;z-index:5;opacity:0.9; ">
+<div id="webmap" style="background-color:black;position:fixed;top:500px;left:43%;width:25%;height:auto;z-index:5;opacity:0.9; ">
   <h6 style="color:whitesmoke;"> Turkıye</h6>
   <img  id="foto" src="images/babam.jpg" alt="Smiley face" height="200" width="200" style="left:30px;top:0px;z-index:5;">
   <input id="city"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
@@ -80,13 +138,13 @@
 
     </div>
 <div id="xycoordinates2" style =  " background-color:black;  color:springgreen;position:absolute;top:63px;left:150px;"> </div>
-<div id="div2" style="position:absolute; top:500px;left:0px;background-color:white;padding:10px;width:30%;height:200px;overflow:scroll;border:solid black 2px;" >
+<div id="div2" style="position:absolute; top:500px;left:40px;background-color:lightslategray;padding:10px;width:15%;height:200px;overflow:scroll;border:solid black 2px;" >
 <p >  map messages</p>
 
 
 </div>
 
-<div id="div1" style="position:absolute; top:800px;left:0px;background-color:white;padding:10px;width:80%;height:200px;overflow:scroll;border:solid black 2px;" >
+<div id="div1" style="position:absolute; top:500px;left:350px;background-color:white;padding:10px;width:20%;height:200px;overflow:scroll;border:solid black 2px;" >
 <p id="p1">  map 1 pixel  = 0,3125  m</p>
 <p id="p2">  notes /* GPS scaling <br>
 encoder calculations , 
@@ -122,7 +180,10 @@ var getcor = []
  var bank = {'x':'','y':'', 'type':'','info':''};
 var picsel = 1 ;
 var tyre = 1;
+function commentbox() { 
+ document.getElementById("commentbox").style.visibility ="visible";
 
+}
 function sendmes(event) {
    var rect = c.getBoundingClientRect();
   var r = event.clientX-rect.left-4;
@@ -306,6 +367,50 @@ axios.get('/coco').then(resp => {
      console.log(getcor[0]," point");
      console.log(getcor[1]," point");
      console.log(getcor[2]," point");
+ }
+
+
+
+function insertdb(){
+var name = "'"+document.getElementById("name").value+"'";
+var address= "'"+document.getElementById("address").value+"'";
+axios.post('/insertdb',{
+  name,
+  address
+}
+  )
+  .then(function (response) {
+    console.log(response.data);
+    var time = Date();
+    console.log(time);
+  alert("kayıt tamam");
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
+
+ function dbden() {
+
+axios.get('/dbden').then(resp => {
+    console.log("veritabanından gelen bilgiler");
+    
+      console.log(resp.data.length);
+     
+for  (var y = 0 ; y <resp.data.length; y++ ) { 
+  var para = document.createElement("p");
+              
+    var node = document.createTextNode( "name = "+resp.data[y].name+" /adrress  "+resp.data[y].address);
+    para.appendChild(node);
+    var element = document.getElementById("div2");
+    element.appendChild(para);
+    
+  console.log("name = "+resp.data[y].name+" /adrress  "+resp.data[y].address);
+}}).catch(error => {
+    console.log(error.response)
+  });
  }
 
  function repeat() {

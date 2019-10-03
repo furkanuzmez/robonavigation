@@ -7,10 +7,27 @@ var logger = require('morgan');
 var fs = require('fs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+var mysql = require('mysql');
 var app = express();
 
 // view engine setup
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "furkan",
+  database: "mydb"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+ 
+    console.log("conneted to db");
+  
+});
+ 
+ global.con = con ;
+
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
