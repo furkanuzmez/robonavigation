@@ -4,7 +4,7 @@
 <style>
 .but{
   background-color: #0f1010;
-    color: azure;   
+    color: azure;
      height: 40px;
 }
 .zoom {
@@ -45,7 +45,9 @@
  left:40%;
  z-index: 10 ;
  background-color: white;
- width:max-content;
+ width:25%;
+   margin:auto;
+  
 }
 </style>
 <html>
@@ -55,14 +57,22 @@
 <div class="addcoment" id="commentbox">
  Comment  <br> <input id="name" type="text" name="name" value="" style="border:1px solid gray;width:80px;"  > <br>
  Location  <br> <input id="address" type="text" name="address" value="" style="border:1px solid gray;width:80px;"  > <br>
- INSERT  <br> <button class="btn btn-secondary btn-lg"  id="address"onclick="insertdb()">INSERTDB</button><br>
+ INSERT  <br> <button class="btn btn-secondary btn-lg"  id="address" onclick="insertdb()">INSERTDB</button><br>
+ Hide  <br> <button class="btn btn-secondary btn-lg"  id="address"   onclick="hide()">hide</button><br>
   
+  
+   </div>
+<div class="addcoment" id="newsbox">
+ Location <br> <input id="location" type="text"     name="location" value="" style="border:1px solid gray;width:80px;"  > <br>
+ Haberler <br> <input id="news"     type="text"     name="news" value="" style="border:1px solid gray;width:80px;"  > <br>
+ ADD  <br> <button class="btn btn-secondary btn-lg"  id="address" onclick="addnews()">add</button><br>
+ Hide <br> <button class="btn btn-secondary btn-lg"  id="address"   onclick="hide()">hide</button><br>
   
   
    </div>
 
-
   <div id="button-box" style="width:auto;position:absolute;left:5%;top:10px;height:auto;background-color: floralwhite;padding:10px;"   >
+    <button class="btn btn-secondary btn-lg " onclick="newsbox()"> Addnews</button>
     <button class="btn btn-secondary btn-lg " onclick="commentbox()"> Comment</button>
     <button class="btn btn-secondary btn-lg " onclick="get_coordinates()"> Get_Coordinates</button>
 
@@ -96,7 +106,7 @@
 
 
 
-<canvas   onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:60px;left:35px;border:1px solid #c3c3c3;z-index:5;" ></canvas>
+<canvas  onmousemove="sendmes(event)" onclick="cnvs_setCoordinates(event)" id="coordiv" width="600" height="428"  style="position:absolute;top:60px;left:35px;border:1px solid #c3c3c3;z-index:5;" ></canvas>
 
 <canvas onclick="cnvs_setCoordinates(event)" id="coordivrobo" width="600" height="428" style=" background-color:black;position:absolute;top:60px;left:640px;border:1px solid #c3c3c3" ></canvas>
 
@@ -131,7 +141,7 @@
 <div id="webmap" style="background-color:black;position:fixed;top:500px;left:43%;width:25%;height:auto;z-index:5;opacity:0.9; ">
   <h6 style="color:whitesmoke;"> Turkıye</h6>
   <img  id="foto" src="images/babam.jpg" alt="Smiley face" height="200" width="200" style="left:30px;top:0px;z-index:5;">
-  <input id="city"  type="text" name="height" value="428" style="border:1px solid gray;width:80px;" > <br>
+  <input id="city"  type="text" name="height" value="428" style="border:1px solid gray;width:250px;" > <br>
    <h6 style="color:whitesmoke;">City Information</h6>
   
 </div>
@@ -180,23 +190,49 @@ var getcor = []
  var bank = {'x':'','y':'', 'type':'','info':''};
 var picsel = 1 ;
 var tyre = 1;
+
+
+function hide() {
+   document.getElementById("commentbox").style.visibility ="hidden";
+   document.getElementById("newsbox").style.visibility ="hidden";
+}
 function commentbox() { 
  document.getElementById("commentbox").style.visibility ="visible";
 
+}
+function newsbox( )
+{
+  document.getElementById("newsbox").style.visibility ="visible";
 }
 function sendmes(event) {
    var rect = c.getBoundingClientRect();
   var r = event.clientX-rect.left-4;
   var p = event.clientY-rect.top-4;
   var coor = "Coordinates: (" + r + "," + p + ")";
-  
+  var bilgi;
  for (f = 0 ; f <=getcor.length;f++)
 
   { 
        
      if(Math.sqrt((getcor[f].x-r) ** 2 + (getcor[f].y-16-p) ** 2) < 14) 
      {
- 
+ axios.get('/dbden').then(resp => {
+    console.log("veritabanından gelen bilgiler");
+    
+      console.log(resp.data.length);
+    
+for  (var y = 0 ; y <resp.data.length; y++ ) { 
+  var para = document.createElement("p");
+             
+    var node = document.createTextNode( "name = "+resp.data[y].location+" /adrress  "+resp.data[y].news);
+    para.appendChild(node);
+    var element = document.getElementById("div2");
+    element.appendChild(para);
+     document.getElementById("city").value =resp.data[y].news;
+  console.log("city = "+resp.data[y].location+" /news  "+resp.data[y].news);
+}}).catch(error => {
+    console.log(error.response)
+  });
 console.log("my parker" + f ); 
      console.log("corx");
            console.log((getcor[f].x));
@@ -210,7 +246,7 @@ console.log("my parker" + f );
            console.log("images name of point");
            console.log(pic);
          document.getElementById("foto").src =pic;
-         document.getElementById("city").value =getcor[f].info;
+         document.getElementById("city").value =bilgi;
          var para = document.createElement("p");
               para.style.backgroundColor = "yellow";
             var node = document.createTextNode( "marker found positon   "+ f + "****" + r +"****"+"****"+p+"****"+getcor[f].info);
@@ -390,6 +426,25 @@ axios.post('/insertdb',{
   });
 }
 
+function addnews(){
+var location = "'"+document.getElementById("location").value+"'";
+var news= "'"+document.getElementById("news").value+"'";
+axios.post('/addnews',{
+  location,
+  news
+}
+  )
+  .then(function (response) {
+    console.log(response.data);
+    var time = Date();
+    console.log(time);
+  alert("kayıt tamam");
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+}
 
 
  function dbden() {
@@ -402,7 +457,7 @@ axios.get('/dbden').then(resp => {
 for  (var y = 0 ; y <resp.data.length; y++ ) { 
   var para = document.createElement("p");
               
-    var node = document.createTextNode( "name = "+resp.data[y].name+" /adrress  "+resp.data[y].address);
+    var node = document.createTextNode( "name = "+resp.data[y].comments+" /adrress  "+resp.data[y].date);
     para.appendChild(node);
     var element = document.getElementById("div2");
     element.appendChild(para);

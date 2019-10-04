@@ -37,7 +37,8 @@ router.get('/coco', function(req, res, next) {
 router.post('/insertdb',function(req,res,next){
 console.log(req.body);
 //var name  = req.body.name 
-var sql = "INSERT INTO customers (name, address) VALUES ( "+ req.body.name + "," + req.body.address +" )";
+ var sql = "DELETE FROM comments WHERE id = '6'";
+//var sql = "INSERT INTO comments (comments, date) VALUES ( "+ req.body.name + "," + req.body.address +" )";
 console.log(sql);
  con.query(sql, function (err, result, fields) {
    console.log('EKLENDI');
@@ -46,11 +47,23 @@ console.log(sql);
  });
 
 })
+router.post('/addnews',function(req,res,next){
+console.log(req.body);
+//var name  = req.body.name 
+// var sql = "DELETE FROM comments WHERE id = '6'";
+var sql = "INSERT INTO citynews (location, news) VALUES ( "+ req.body.location + "," + req.body.news +" )";
+console.log(sql);
+ con.query(sql, function (err, result, fields) {
+   console.log('EKLENDI');
+   console.log(result);
+   res.send(req.body.news);
+ });
 
+})
 
 router.get('/dbden', function(req, res, next) {
-var sql = "INSERT INTO customers (name, address) VALUES ('osman', 'Ismir 35')";
-  con.query("SELECT name, address FROM customers   ", function (err, result, fields) {
+var sql = "INSERT INTO customers (name, address)  ORDER BY id DESC VALUES ('osman', 'Ismir 35')";
+  con.query("SELECT location,news FROM citynews   ", function (err, result, fields) {
     if (err) throw err;
     console.log("dbden veriler ");
   v++;
